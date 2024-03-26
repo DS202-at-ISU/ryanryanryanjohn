@@ -1,23 +1,23 @@
-Our dataset has many fields, those include:
+Our dataset has many fields, those include:  
 
-Div:
-(String) Representss the League Division
-Date:
-(Date) Match Date (dd/mm/yy)
-Time:
-(Time) Time of match (Military time)
-HomeTeam:
-(String) Home Team
-AwayTeam:
-(String) Away Team
-FTHG:
-(Int) Full Time Home Team Goals
-FTAG:
-(Int) Full Time Away Team Goals
-FTR:
-(H=Home Win, D=Draw, A=Away Win) Full Time Result 
-HTHG:
-(Int) Half Time Home Team Goals
+Div:  
+(String) Representss the League Division  
+Date:  
+(Date) Match Date (dd/mm/yy)  
+Time:  
+(Time) Time of match (Military time)  
+HomeTeam:  
+(String) Home Team  
+AwayTeam:  
+(String) Away Team  
+FTHG:  
+(Int) Full Time Home Team Goals  
+FTAG:  
+(Int) Full Time Away Team Goals  
+FTR:  
+(H=Home Win, D=Draw, A=Away Win) Full Time Result   
+HTHG:  
+(Int) Half Time Home Team Goals  
 HTAG:
 (Int) Half Time Away Team Goals
 HTR:
