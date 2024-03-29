@@ -29,6 +29,38 @@ prem <- read.csv("Datasets/final_dataset.csv")
 head(prem, 3)
 ```
 
+```{r}
+##Missing Values:
+missing_values <- colSums(is.na(prem))
+print(missing_values)
+```
+
+```{r}
+##Date-time Format:
+prem$Date <- as.Date(prem$Date, format = "%d/%m/%y")
+
+##Unique Values:
+unique_teams <- unique(c(prem$HomeTeam, prem$AwayTeam))
+print(unique_teams)
+
+## Possible Unnecessay Columns:
+columns_to_remove <- c("Div", "Time", "Referee") 
+prem_clean <- prem[, !(names(prem) %in% columns_to_remove)]
+```
+
+## **Marginal Summaries:** 
+
+```{r}
+##Summary Statistics:
+summary(prem_clean)
+```
+
+```{r}
+##Table of full time results:
+outcome_freq <- table(prem_clean$FTR)
+print(outcome_freq)
+```
+
 ### Questions to be answered:
 
 #### Trends over time:
