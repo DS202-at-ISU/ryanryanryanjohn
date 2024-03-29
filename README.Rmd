@@ -29,3 +29,26 @@ prem <- read.csv("Datasets/final_dataset.csv")
 head(prem, 3)
 ```
 
+### Questions to be answered:
+
+#### Trends over time:
+  - How has scoring changed over the years?
+  - How does scoring change across a full season?
+
+#### Home vs. Away performance:
+  - How do teams tend to perform in home games vs. away games?
+  - Is there a measurable advantage to being at home?
+
+#### Goal scoring analysis:
+  - Which teams have scored the most/fewest goals?
+  - Does having a greater % of shots on target correlate to winning more?
+  
+#### Betting trends:
+  - How well do the betting odds predict the outcome of a game?
+  
+#### Predictive analysis:
+  - Can we use the previous data to predict the outcome of the rest of the current premier league season?
+
+
+
+
