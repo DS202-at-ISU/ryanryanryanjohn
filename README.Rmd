@@ -34,6 +34,7 @@ head(prem, 3)
 #### Trends over time:
   - How has scoring changed over the years?
   - How does scoring change across a full season?
+  - Is there a significant home advantage in the English Premier League over the past 22 years?
 
 #### Home vs. Away performance:
   - How do teams tend to perform in home games vs. away games?
@@ -42,13 +43,15 @@ head(prem, 3)
 #### Goal scoring analysis:
   - Which teams have scored the most/fewest goals?
   - Does having a greater % of shots on target correlate to winning more?
+  - Is there a correlation between the number of shots taken by a team and the number of goals scored?
   
 #### Betting trends:
   - How well do the betting odds predict the outcome of a game?
+  - Is there a correlation between pre-match betting odds and match outcomes?
   
 #### Predictive analysis:
   - Can we use the previous data to predict the outcome of the rest of the current premier league season?
-
+  - How has the overall style of play (e.g., possession, based, counter-attacking) evolved over this 22-year period?
 
 
 
