@@ -168,7 +168,7 @@ home_advantage <- prem_clean %>%
     home_win_percentage = mean(FTR == "H") * 100,
     away_win_percentage = mean(FTR == "NH") * 100,
   )
-print(win_percentages)
+print(home_advantage)
 
 #Chi-Square Test of Independe (Are these variables ralted?):
 contingency_table <- table(prem_clean$FTR)
