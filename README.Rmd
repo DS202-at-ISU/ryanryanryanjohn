@@ -162,7 +162,8 @@ ggplot(avg_goals_per_matchday, aes(x = Matchday, y = avg_goals, group = 1)) +
 
 ```{r}
 #Precentages of home wins and away wins:
-win_percentages <- prem_clean %>%
+home_advantage <- prem_clean %>%
+  group_by(Season) %>%
   summarize(
     home_win_percentage = mean(FTR == "H") * 100,
     away_win_percentage = mean(FTR == "NH") * 100,
@@ -182,8 +183,8 @@ print(t_test)
 
 #Line Graph Comparing home and away precentages over the years:
 ggplot(home_advantage, aes(x = Season)) +
-  geom_line(aes(y = home_wins, color = "Home Wins", group = 1)) +
-  geom_line(aes(y = away_wins, color = "Away Wins", group = 2)) +
+  geom_line(aes(y = home_win_percentage, color = "Home Wins", group = 1)) +
+  geom_line(aes(y = away_win_percentage, color = "Away Wins", group = 2)) +
   labs(title = "Home/Away Advantage in the EPL Over the Past 22 Years",
        x = "Season (Year)",
        y = "Percentage") +
@@ -193,7 +194,7 @@ ggplot(home_advantage, aes(x = Season)) +
 
 ```
 
-\*Based on our line graph and percentages calculated, the win percentages tended to be higher for teams when they were away versus being on their home field. Additionally, according to our ran Chi-squared test and t-test, their is very strong evidence that the home and away varaibles are related to each other and their is a significant difference between them. While this quite a surprising result, some factors that could have contributed to this result could be due to a new environment (field) for the away players, the absence of fans during bad weather, or even that many people are watching the broadcasts of the games with their technological devices.
+\*Based on our line graph and percentages calculated, the win percentages tended to be higher for teams when they were away versus being on their home field. Additionally, according to our ran Chi-squared test and t-test, there is very strong evidence that the home and away variables are related to each other and their is a significant difference between them. While this quite a surprising result, some factors that could have contributed to this result could be due to a new environment (field) for the away players, the absence of fans during bad weather, or even that many people are watching the broadcasts of the games with their technological devices.
 
 \*[Resource]{.underline}: <https://www.skysports.com/football/news/11661/12079338/premier-league-goals-and-away-wins-at-record-highs-has-home-advantage-been-wiped-out>
 
