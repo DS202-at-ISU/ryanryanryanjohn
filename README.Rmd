@@ -23,8 +23,8 @@ knitr::opts_chunk$set(echo = TRUE)
 Our data encompasses the last 22 years of the English Premier League, the largest soccer league in the world, by revenue. This includes statistics about every game, including goals scored, shots taken, the teams involved, even betting odds for many of the games.
 
 ```{r}
-prem <- read.csv(file.choose(), header = T)
-##prem <- read.csv("Datasets/final_dataset.csv")
+##prem <- read.csv(file.choose(), header = T)
+prem <- read.csv("Datasets/final_dataset.csv")
 
 head(prem, 3)
 ```
@@ -201,3 +201,21 @@ ggplot(home_advantage, aes(x = Season)) +
 ------------------------------------------------------------------------
 
 #### [Home vs. Away performance]{.underline}:
+
+#### [Goal Scoring Analysis]{.underline}:
+-   Which teams have scored the most/fewest goals?
+
+```{r}
+View(prem)
+```
+
+-   Does having a greater % of shots on target correlate to winning more?
+```{r}
+
+```
+
+-   Is there a correlation between the number of shots taken by a team and the number of goals scored?
+```{r}
+
+```
+
