@@ -246,14 +246,44 @@ write.csv(merged_data, "merged_file.csv", row.names = FALSE)
 (1) How do teams tend to perform in home games vs. away games?
 
 ```{r}
+avg_home_final_score <- mean(merged_data$FTHG)
+avg_away_final_score <- mean(merged_data$FTAG)
+avg_home_shots <- mean(merged_data$HST)
+avg_away_shots <- mean(merged_data$AST)
+avg_home_corners <- mean(merged_data$HC)
+avg_away_corners <- mean(merged_data$AC)
 
+final_score_percent = avg_home_final_score/avg_away_final_score
+shots_percent = avg_home_shots/avg_away_shots
+corners_percent = avg_home_corners/avg_away_corners
+
+cat("The average final score per game by the home team is: ", avg_home_final_score, "\n") 
+cat("The average fianl score per game by the away team is: ", avg_away_final_score, "\n")
+cat("The average shots on goal by the home team is: ", avg_home_shots, "\n") 
+cat("The average shots on goal by the away team is: ", avg_away_shots, "\n")
+cat("The average amount of corner kicks by the home team is: ", avg_home_corners, "\n") 
+cat("The average amount of corner kicks by the away team is: ", avg_away_corners, "\n\n")
+
+cat("The home team scores ", final_score_percent, " times more points.\n")
+cat("The home team shoots on goal ", shots_percent, " times more.\n")
+cat("The home team gets ", corners_percent, " times more corner kicks.\n")
 ```
 
 (2) Is there a measurable advantage to being at home?
 
 ```{r}
+home_wins <- table(merged_data$FTR == "H")
+home_wins <- as.data.frame(home_wins)[["Freq"]][2]
 
+away_wins <- table(merged_data$FTR == "A")
+away_wins <- as.data.frame(away_wins)[["Freq"]][2]
+
+draws <- table(merged_data$FTR == "D")
+draws <- as.data.frame(draws)[["Freq"]][2]
+
+cat("In our data set, of the 8020 matches,", home_wins, "were won by the home team, while ", away_wins, "matches were won by the away team. The amount of matches that ended in a draw was", draws, ".\n")
 ```
+By looking at the data from our past two questions, it does appear that there is an advantage to being the home team. By playing at your own field, you seem to take more shots on goal, get more opportunities for corner kicks, and overall win more matches. This could all be due to a high amount of experience and practice on that field as well as having a crowd that is likely biased towards the home team. Competeing is a mental activity as well as physical so having a crowd there to keep you going could make up a part of the difference. We have seen that there is an advantage to being the team who gets to play at their own field, but could there also be a disadvantage to being the team that is away? We wanted to look at how likely you are to get called for a foul. 
 
 (3) Are teams more likely to get carded when away?
 
@@ -273,6 +303,7 @@ cat("The away team is ", card_percent, " times more likely to receive a card.")
 ```
 
 Like all sports, in soccer there are penalties. If a player commits a foul, they will receive a yellow or red card. This is from the discretion of the referee at the game. This brought up the idea that playing an away game may bias how often teams get carded. From our data we found that by being the away team, you are approximately 1.25 times more likely to receive a card. This could be due to bias but could also be explained for reasons such as a team playing more aggressively when they are away or teams not wanting to be fouled out at a home game. 
+
 \#### [Goal Scoring Analysis]{.underline}:
 
 -   Which teams have scored the most/fewest goals?
