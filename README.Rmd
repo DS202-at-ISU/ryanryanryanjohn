@@ -69,7 +69,7 @@ print(outcome_freq)
 -   How does scoring change across a full season?
 -   Is there a significant home advantage in the English Premier League over the past 22 years?
 
-#### Home vs. Away performance:
+#### Home vs. Away performance: Ryan L
 
 -   How do teams tend to perform in home games vs. away games?
 -   Is there a measurable advantage to being at home?
