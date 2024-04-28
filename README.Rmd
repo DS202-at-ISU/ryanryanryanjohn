@@ -201,79 +201,79 @@ ggplot(home_advantage, aes(x = Season)) +
 ------------------------------------------------------------------------
 
 #### [Home vs. Away performance]{.underline}:
-```{r}
-data1 <- read.csv("Datasets/2000-01.csv")
-data2 <- read.csv("Datasets/2001-02.csv")
-data3 <- read.csv("Datasets/2002-03.csv")
-data4 <- read.csv("Datasets/2003-04.csv")
-data5 <- read.csv("Datasets/2004-05.csv")
-data6 <- read.csv("Datasets/2005-06.csv")
-data7 <- read.csv("Datasets/2006-07.csv")
-data8 <- read.csv("Datasets/2007-08.csv")
-data9 <- read.csv("Datasets/2008-09.csv")
-data10 <- read.csv("Datasets/2009-10.csv")
-data11 <- read.csv("Datasets/2010-11.csv")
-data12 <- read.csv("Datasets/2011-12.csv")
-data13 <- read.csv("Datasets/2012-13.csv")
-data14 <- read.csv("Datasets/2013-14.csv")
-data15 <- read.csv("Datasets/2014-15.csv")
-data16 <- read.csv("Datasets/2015-16.csv")
-data17 <- read.csv("Datasets/2016-17.csv")
-data18 <- read.csv("Datasets/2017-18.csv")
-data19 <- read.csv("Datasets/2018-19.csv")
-data20 <- read.csv("Datasets/2019-20.csv")
-data21 <- read.csv("Datasets/2020-2021.csv")
-data22 <- read.csv("Datasets/2021-2022.csv")
 
-merged <- cbind(data1, data2, data3, data4, data5, data6, data7, data8, data9, data10, data11, data12, data13, data14, data15, data16, data17, data18, data19, data20, data21, data22)
+```{r}
+# List of CSV files
+file_list <- c("Datasets/2000-01.csv",
+"Datasets/2001-02.csv",
+"Datasets/2002-03.csv",
+"Datasets/2003-04.csv",
+"Datasets/2004-05.csv",
+"Datasets/2005-06.csv",
+"Datasets/2006-07.csv",
+"Datasets/2007-08.csv",
+"Datasets/2008-09.csv",
+"Datasets/2009-10.csv",
+"Datasets/2010-11.csv",
+"Datasets/2011-12.csv",
+"Datasets/2012-13.csv",
+"Datasets/2013-14.csv",
+"Datasets/2014-15.csv",
+"Datasets/2015-16.csv",
+"Datasets/2016-17.csv",
+"Datasets/2017-18.csv",
+"Datasets/2018-19.csv",
+"Datasets/2019-20.csv",
+"Datasets/2020-2021.csv",
+"Datasets/2021-2022.csv")
+
+# Read CSV files into a list of data frames
+data_frames <- lapply(file_list, read.csv)
+
+# Identify common columns
+common_columns <- Reduce(intersect, lapply(data_frames, colnames))
+
+# Subset data frames to keep only common columns
+data_frames_subset <- lapply(data_frames, function(df) df[, common_columns])
+
+# Merge data frames by rows
+merged_data <- do.call(rbind, data_frames_subset)
+
+# Write merged data frame to CSV
+write.csv(merged_data, "merged_file.csv", row.names = FALSE)
 ```
 
 (1) How do teams tend to perform in home games vs. away games?
+
 ```{r}
 
 ```
 
 (2) Is there a measurable advantage to being at home?
+
 ```{r}
 
 ```
+
 (3) Are teams more likely to get carded when away?
+
 ```{r}
-# Calculate total cards for home and away teams
-epl_cards <- prem_clean %>%
-  mutate(total_yellow_home = yellow_cards_home + red_cards_home,
-         total_yellow_away = yellow_cards_away + red_cards_away)
+avg_home_yellow <- mean(merged_data$HY)
+avg_away_yellow <- mean(merged_data$AY)
+avg_home_red <- mean(merged_data$HR)
+avg_away_red <- mean(merged_data$AR)
 
-# Summarize total cards for each team
-home_cards <- epl_data %>%
-  group_by(home_team) %>%
-  summarise(total_yellow = sum(total_yellow_home),
-            total_red = sum(red_cards_home))
+avg_home_cards = avg_home_yellow + avg_home_red
+avg_away_cards = avg_away_yellow + avg_away_red
+card_percent = avg_away_cards/avg_home_cards
 
-away_cards <- epl_data %>%
-  group_by(away_team) %>%
-  summarise(total_yellow = sum(total_yellow_away),
-            total_red = sum(red_cards_away))
-
-# Merge home and away cards
-all_cards <- merge(home_cards, away_cards, by.x = "home_team", by.y = "away_team", all = TRUE)
-all_cards$total_yellow <- rowSums(subset(all_cards, select=c(total_yellow.x, total_yellow.y)), na.rm=TRUE)
-all_cards$total_red <- rowSums(subset(all_cards, select=c(total_red.x, total_red.y)), na.rm=TRUE)
-all_cards <- subset(all_cards, select=c(home_team, total_yellow, total_red))
-
-# Reshape data for plotting
-cards_melted <- melt(all_cards, id.vars = "home_team")
-
-# Create stacked bar graph
-ggplot(cards_melted, aes(x = home_team, y = value, fill = variable)) +
-  geom_bar(stat = "identity") +
-  labs(title = "Total Yellow and Red Cards by Team (Last 20 Years)",
-       x = "Team",
-       y = "Total Cards") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+cat("The average amounts of cards per game recevied by the home team is: ", avg_home_cards, "\n") 
+cat("The average amounts of cards per game recevied by the away team is: ", avg_away_cards, "\n")
+cat("The away team is ", card_percent, " times more likely to receive a card.")
 ```
 
-#### [Goal Scoring Analysis]{.underline}:
+Like all sports, in soccer there are penalties. If a player commits a foul, they will receive a yellow or red card. This is from the discretion of the referee at the game. This brought up the idea that playing an away game may bias how often teams get carded. From our data we found that by being the away team, you are approximately 1.25 times more likely to receive a card. This could be due to bias but could also be explained for reasons such as a team playing more aggressively when they are away or teams not wanting to be fouled out at a home game. 
+\#### [Goal Scoring Analysis]{.underline}:
 
 -   Which teams have scored the most/fewest goals?
 
