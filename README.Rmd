@@ -16,6 +16,8 @@ Group Members:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
 ```
 
 ## English Premier League Statistics
@@ -309,17 +311,55 @@ Like all sports, in soccer there are penalties. If a player commits a foul, they
 -   Which teams have scored the most/fewest goals?
 
 ```{r}
-View(prem)
+# Get unique teams from both HomeTeam and AwayTeam columns
+unique_teams <- unique(c(merged_data$HomeTeam, merged_data$AwayTeam))
+
+# Initialize empty vectors to store the total home and away goals
+home_goals <- numeric(length(unique_teams))
+away_goals <- numeric(length(unique_teams))
+
+# Loop through each unique team
+for (i in 1:length(unique_teams)) {
+  team <- unique_teams[i]
+  home_goals[i] <- sum(merged_data$FTHG[merged_data$HomeTeam == team])
+  away_goals[i] <- sum(merged_data$FTHG[merged_data$AwayTeam == team])
+}
+
+# Create dataframe with team names and total goals
+goals_scored_by_team <- data.frame(
+  team = unique_teams,
+  home_goals = home_goals,
+  away_goals = away_goals
+)
+
+# Create total_goals column
+goals_scored_by_team$total_goals = goals_scored_by_team$home_goals + goals_scored_by_team$away_goals
+
+# Create most goals dataframe
+most_goals_scored_by_team <- goals_scored_by_team %>%
+  arrange(desc(total_goals)) %>%
+  slice_head(n = 10)
+
+# Create fewest goals dataframe
+fewest_goals_scored_by_team <- goals_scored_by_team %>%
+  arrange(total_goals) %>%
+  slice_head(n = 10)
+
+# Create plot of the most goals and fewest goals
+ggplot(most_goals_scored_by_team, aes(x = reorder(team, -total_goals), y = total_goals)) + geom_bar(stat = "identity")
+ggplot(fewest_goals_scored_by_team, aes(x = reorder(team, -total_goals), y = total_goals)) + geom_bar(stat = "identity")
 ```
 
 -   Does having a greater % of shots on target correlate to winning more?
 
 ```{r}
-
+View(merged_data)
 ```
 
 -   Is there a correlation between the number of shots taken by a team and the number of goals scored?
 
 ```{r}
-
+# x axis - shots taken
+# y axis - goals scored
+# fill - green=won game / red=lost game
 ```
