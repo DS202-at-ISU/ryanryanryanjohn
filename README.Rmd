@@ -367,20 +367,53 @@ fewest_goals_scored_by_team <- goals_scored_by_team %>%
   slice_head(n = 10)
 
 # Create plot of the most goals and fewest goals
-ggplot(most_goals_scored_by_team, aes(x = reorder(team, -total_goals), y = total_goals)) + geom_bar(stat = "identity")
-ggplot(fewest_goals_scored_by_team, aes(x = reorder(team, -total_goals), y = total_goals)) + geom_bar(stat = "identity")
+ggplot(most_goals_scored_by_team, aes(x = reorder(team, -total_goals), y = total_goals)) + geom_bar(stat = "identity") + 
+  labs(x="Team", y="Total Goals") + theme_minimal()
+ggplot(fewest_goals_scored_by_team, aes(x = reorder(team, -total_goals), y = total_goals)) + geom_bar(stat = "identity") + 
+  labs(x="Team", y="Total Goals") + theme_minimal()
 ```
 
 -   Does having a greater % of shots on target correlate to winning more?
 
 ```{r}
-View(merged_data)
+library(ggplot2)
+library(dplyr)
+
+# Calculate on-target percentage for home and away teams
+merged_data2 <- merged_data %>%
+  mutate(HomeOnTargetPercent = (HST / HS) * 100,
+         AwayOnTargetPercent = (AST / AS) * 100,
+         HomeResult = ifelse(FTR == "H", "Win", ifelse(FTR == "A", "Loss", "Draw")),
+         AwayResult = ifelse(FTR == "A", "Win", ifelse(FTR == "H", "Loss", "Draw")))
+
+# Combine on-target percentage data for both home and away teams
+on_target_data <- rbind(
+  data.frame(OnTargetPercent = merged_data2$HomeOnTargetPercent, Result = merged_data2$HomeResult),
+  data.frame(OnTargetPercent = merged_data2$AwayOnTargetPercent, Result = merged_data2$AwayResult)
+)
+
+# Plot histogram with combined data
+ggplot(on_target_data, aes(x = OnTargetPercent, fill = Result)) +
+  geom_histogram(bins = 10, binwidth = 10, position = "stack", alpha = 0.6) +
+  scale_fill_manual(values = c("yellow", "red", "green")) +  # Specify colors for wins and losses
+  labs(x = "On Target Percentage", y = "Frequency", title = "Histogram of On Target Percentage") + xlim(0,100) +
+  theme_minimal()
 ```
 
 -   Is there a correlation between the number of shots taken by a team and the number of goals scored?
 
 ```{r}
-# x axis - shots taken
-# y axis - goals scored
-# fill - green=won game / red=lost game
+# Plot shots taken
+ggplot(merged_data2, aes(x = HST, y = FTHG, fill = FTR)) +
+  geom_point(shape = 21, size = 3, alpha = 0.7) +
+  scale_fill_manual(values = c("red", "yellow", "green")) +
+  labs(x = "Shots Taken", y = "Goals Scored", title = "Relationship between Shots Taken and Goals Scored for Home Team") +
+  theme_minimal()
+
+# Plot scatter plot with different colors for result
+ggplot(merged_data2, aes(x = AST, y = FTAG, fill = FTR)) +
+  geom_point(shape = 21, size = 3, alpha = 0.7) +
+  scale_fill_manual(values = c("green", "yellow", "red")) +
+  labs(x = "Shots Taken", y = "Goals Scored", title = "Relationship between Shots Taken and Goals Scored for Away Team") +
+  theme_minimal()
 ```
