@@ -75,6 +75,7 @@ print(outcome_freq)
 
 -   How do teams tend to perform in home games vs. away games?
 -   Is there a measurable advantage to being at home?
+-   Is there a disadvantage to playing as the away team?
 
 #### Goal scoring analysis:
 
@@ -282,6 +283,26 @@ away_wins <- as.data.frame(away_wins)[["Freq"]][2]
 
 draws <- table(merged_data$FTR == "D")
 draws <- as.data.frame(draws)[["Freq"]][2]
+
+FTR_counts = table(merged_data$FTR)
+percentages <- round(prop.table(FTR_counts) * 100, 1)
+
+pie_chart <- ggplot(data = NULL, aes(x = "", y = FTR_counts, fill = names(FTR_counts))) +
+  geom_bar(stat = "identity") +
+  coord_polar("y", start=0) + 
+  labs(title = "Distributions of Final Results for EPL", fill = "Result of Game") +
+  theme_minimal() +
+  theme(legend.position = "right", axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid  = element_blank(),
+        axis.title = element_blank()) +
+   scale_fill_manual(values = c("H" = "forestgreen", "A" = "maroon", "D" = "navy"),
+                    labels = c(paste("Home Win", " (", percentages["H"], "%)"),
+                               paste("Away Win", " (", percentages["A"], "%)"),
+                               paste("Draw", " (", percentages["D"], "%)")))
+
+# Display the pie chart
+print(pie_chart)
 
 cat("In our data set, of the 8020 matches,", home_wins, "were won by the home team, while ", away_wins, "matches were won by the away team. The amount of matches that ended in a draw was", draws, ".\n")
 ```
