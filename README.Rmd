@@ -575,18 +575,30 @@ fewest_goals_scored_by_team <- goals_scored_by_team %>%
   slice_head(n = 10)
 
 # Create plot of the most goals and fewest goals
-ggplot(most_goals_scored_by_team, aes(x = reorder(team, -total_goals), y = total_goals)) + geom_bar(stat = "identity") + 
-  labs(x="Team", y="Total Goals") + theme_minimal()
-ggplot(fewest_goals_scored_by_team, aes(x = reorder(team, -total_goals), y = total_goals)) + geom_bar(stat = "identity") + 
-  labs(x="Team", y="Total Goals") + theme_minimal()
+plot1 <- ggplot(most_goals_scored_by_team, aes(x = reorder(team, -total_goals), y = total_goals)) + 
+  geom_bar(stat = "identity") + 
+  labs(x = "Team", y = "Total Goals") + 
+  theme_minimal(base_size=9)
+
+plot2 <- ggplot(fewest_goals_scored_by_team, aes(x = reorder(team, -total_goals), y = total_goals)) + 
+  geom_bar(stat = "identity") + 
+  labs(x = "Team", y = "Total Goals",) + 
+  theme_minimal(base_size=9)
+
+# Get the maximum value from both datasets
+max_value <- max(max(most_goals_scored_by_team$total_goals), max(fewest_goals_scored_by_team$total_goals))
+
+# Set the same y-axis limits for both plots
+plot1 <- plot1 + ylim(0, max_value)
+plot2 <- plot2 + ylim(0, max_value)
+
+plot1
+plot2
 ```
 
 -   Does having a greater % of shots on target correlate to winning more?
 
 ```{r}
-library(ggplot2)
-library(dplyr)
-
 # Calculate on-target percentage for home and away teams
 merged_data2 <- merged_data %>%
   mutate(HomeOnTargetPercent = (HST / HS) * 100,
