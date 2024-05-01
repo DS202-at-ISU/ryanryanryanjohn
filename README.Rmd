@@ -18,6 +18,7 @@ Group Members:
 knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 library(dplyr)
+library(tidyr)
 ```
 
 ## English Premier League Statistics
@@ -49,6 +50,206 @@ print(unique_teams)
 columns_to_remove <- c("Div", "Time", "Referee") 
 prem_clean <- prem[, !(names(prem) %in% columns_to_remove)]
 ```
+
+## **Data Explanation:**
+
+Our dataset consisted of many data points but these were not found across all of the csv files provided. The columns that were provided include: Our dataset has many fields, those include:
+
+Div: (String) Representss the League Division\
+Date: (Date) Match Date (dd/mm/yy)\
+Time: (Time) Time of match (Military time)\
+HomeTeam: (String) Home Team\
+AwayTeam: (String) Away Team\
+FTHG: (Int) Full Time Home Team Goals FTAG: (Int) Full Time Away Team Goals\
+FTR: (H=Home Win, D=Draw, A=Away Win) Full Time Result\
+HTHG: (Int) Half Time Home Team Goals\
+HTAG: (Int) Half Time Away Team Goals\
+HTR: (H=Home Win, D=Draw, A=Away Win) Half Time Result
+
+and Match Statistics (where available)\
+Attendance: (Int) Crowd Attendance\
+Referee: (String) Match Referee\
+HS: (Int) Home Team Shots\
+AS: (Int) Away Team Shots\
+HST: (Int) Home Team Shots on Target\
+AST: (Int)Away Team Shots on Target\
+HHW: (Int) Home Team Hit Woodwork\
+AHW: (Int) Away Team Hit Woodwork\
+HC: (Int) Home Team Corners\
+AC: (Int) Away Team Corners\
+HF: (Int) Home Team Fouls Committed\
+AF: (Int) Away Team Fouls Committed\
+HO: (Int) Home Team Offsides\
+AO: (Int) Away Team Offsides\
+HY: (Int) Home Team Yellow Cards\
+AY: (Int) Away Team Yellow Cards\
+HR: (Int) Home Team Red Cards\
+AR: (Int) Away Team Red Cards HBP: (Int) Home Team Bookings Points (10 : yellow, 25 : red)\
+ABP: (Int) Away Team Bookings Points (10 : yellow, 25 : red)
+
+Additionally there were more betting odds representing multiple forms of betting such as
+
+<details>
+
+<summary>Additional Columns</summary>
+
+```         
+  Key to 1X2 (match) betting odds data:  
+    B365H:   
+    (Float) Bet365 home win odds  
+    B365D:   
+    (Float) Bet365 draw odds  
+    B365A:   
+    (Float) Bet365 away win odds  
+    BSH:   
+    (Float) Blue Square home win odds  
+    BSD:   
+    (Float) Blue Square draw odds  
+    BSA:   
+    (Float) Blue Square away win odds  
+    BWH:   
+    (Float) Bet&Win home win odds  
+    BWD:   
+    (Float) Bet&Win draw odds  
+    BWA:   
+    (Float) Bet&Win away win odds  
+    GBH:   
+    (Float) Gamebookers home win odds  
+    GBD:   
+    (Float) Gamebookers draw odds  
+    GBA:   
+    (Float) Gamebookers away win odds  
+    IWH:   
+    (Float) Interwetten home win odds  
+    IWD:   
+    (Float) Interwetten draw odds  
+    IWA:   
+    (Float) Interwetten away win odds  
+    LBH:   
+    (Float) Ladbrokes home win odds  
+    LBD:   
+    (Float) Ladbrokes draw odds  
+    LBA:   
+    (Float) Ladbrokes away win odds  
+    PSH:   
+    (Float) Pinnacle Sports home win odds  
+    PSD:   
+    (Float) Pinnacle Sports draw odds  
+    PSA:   
+    (Float) Pinnacle Sports away win odds  
+    SOH:   
+    (Float) Sporting Odds home win odds  
+    SOD:   
+    (Float) Sporting Odds draw odds  
+    SOA:   
+    (Float) Sporting Odds away win odds  
+    SBH:   
+    (Float) Sportingbet home win odds  
+    SBD:   
+    (Float) Sportingbet draw odds  
+    SBA:   
+    (Float) Sportingbet away win odds  
+    SJH:   
+    (Float) Stan James home win odds  
+    SJD:   
+    (Float) Stan James draw odds  
+    SJA:   
+    (Float) Stan James away win odds  
+    SYH:   
+    (Float) Stanleybet home win odds  
+    SYD:   
+    (Float) Stanleybet draw odds  
+    SYA:   
+    (Float) Stanleybet away win odds  
+    VCH:   
+    (Float) VC Bet home win odds  
+    VCD:   
+    (Float) VC Bet draw odds  
+    VCA:   
+    (Float) VC Bet away win odds  
+    WHH:   
+    (Float) William Hill home win odds  
+    WHD:   
+    (Float) William Hill draw odds  
+    WHA:   
+    (Float) William Hill away win odds  
+      
+    Bb1X2:    
+    (Float) Number of BetBrain bookmakers used to calculate match odds averages and maximums  
+    BbMxH:    
+    (Float) Betbrain maximum home win odds  
+    BbAvH:    
+    (Float) Betbrain average home win odds  
+    BbMxD:    
+    (Float) Betbrain maximum draw odds  
+    BbAvD:    
+    (Float) Betbrain average draw win odds  
+    BbMxA:    
+    (Float) Betbrain maximum away win odds  
+    BbAvA:    
+    (Float) Betbrain average away win odds  
+      
+      
+      
+    Key to total goals betting odds:  
+      
+    BbOU:    
+    (Float) Number of BetBrain bookmakers used to calculate over/under 2.5 goals (total goals) averages and maximums    
+    BbMx>2.5:    
+    (Float) Betbrain maximum over 2.5 goals  
+    BbAv>2.5:    
+    (Float) Betbrain average over 2.5 goals  
+    BbMx<2.5:    
+    (Float) Betbrain maximum under 2.5 goals  
+    BbAv<2.5:    
+    (Float) Betbrain average under 2.5 goals  
+      
+    GB>2.5:    
+    (Float) Gamebookers over 2.5 goals  
+    GB<2.5:    
+    (Float) Gamebookers under 2.5 goals  
+    B365>2.5:    
+    (Float) Bet365 over 2.5 goals  
+    B365<2.5:    
+    (Float) Bet365 under 2.5 goals  
+      
+      
+    Key to Asian handicap betting odds:  
+      
+    BbAH:    
+    (Float) Number of BetBrain bookmakers used to Asian handicap averages and maximums  
+    BbAHh:    
+    (Float) Betbrain size of handicap (home team)  
+    BbMxAHH:    
+    (Float) Betbrain maximum Asian handicap home team odds  
+    BbAvAHH:    
+    (Float) Betbrain average Asian handicap home team odds  
+    BbMxAHA:    
+    (Float) Betbrain maximum Asian handicap away team odds  
+    BbAvAHA:    
+    (Float) Betbrain average Asian handicap away team odds  
+      
+    GBAHH:    
+    (Float) Gamebookers Asian handicap home team odds  
+    GBAHA:    
+    (Float) Gamebookers Asian handicap away team odds  
+    GBAH:    
+    (Float) Gamebookers size of handicap (home team)  
+    LBAHH:    
+    (Float) Ladbrokes Asian handicap home team odds  
+    LBAHA:    
+    (Float) Ladbrokes Asian handicap away team odds  
+    LBAH:    
+    (Float) Ladbrokes size of handicap (home team)  
+    B365AHH:    
+    (Float) Bet365 Asian handicap home team odds  
+    B365AHA:    
+    (Float) Bet365 Asian handicap away team odds  
+    B365AH:    
+    (Float) Bet365 size of handicap (home team)  
+```
+
+</details>
 
 ## **Marginal Summaries:**
 
@@ -306,7 +507,8 @@ print(pie_chart)
 
 cat("In our data set, of the 8020 matches,", home_wins, "were won by the home team, while ", away_wins, "matches were won by the away team. The amount of matches that ended in a draw was", draws, ".\n")
 ```
-By looking at the data from our past two questions, it does appear that there is an advantage to being the home team. By playing at your own field, you seem to take more shots on goal, get more opportunities for corner kicks, and overall win more matches. This could all be due to a high amount of experience and practice on that field as well as having a crowd that is likely biased towards the home team. Competeing is a mental activity as well as physical so having a crowd there to keep you going could make up a part of the difference. We have seen that there is an advantage to being the team who gets to play at their own field, but could there also be a disadvantage to being the team that is away? We wanted to look at how likely you are to get called for a foul. 
+
+By looking at the data from our past two questions, it does appear that there is an advantage to being the home team. By playing at your own field, you seem to take more shots on goal, get more opportunities for corner kicks, and overall win more matches. This could all be due to a high amount of experience and practice on that field as well as having a crowd that is likely biased towards the home team. Competeing is a mental activity as well as physical so having a crowd there to keep you going could make up a part of the difference. We have seen that there is an advantage to being the team who gets to play at their own field, but could there also be a disadvantage to being the team that is away? We wanted to look at how likely you are to get called for a foul.
 
 (3) Are teams more likely to get carded when away?
 
@@ -323,9 +525,25 @@ card_percent = avg_away_cards/avg_home_cards
 cat("The average amounts of cards per game recevied by the home team is: ", avg_home_cards, "\n") 
 cat("The average amounts of cards per game recevied by the away team is: ", avg_away_cards, "\n")
 cat("The away team is ", card_percent, " times more likely to receive a card.")
+
+data <- data.frame(
+  variable = c("Avg. Home Yellow Cards", "Avg. Away Yellow Cards", "Avg. Home Red Cards", "Avg. Away Red Cards"),
+  average = c(avg_home_yellow, avg_away_yellow, avg_home_red, avg_away_red) 
+)
+
+ggplot(data, aes(x = variable, y = average, fill = variable)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Average Count of Cards Received by Home and Away Teams",
+       x = "Cards Received by Home and Away",
+       y = "Average Cards Received per Game") +
+  scale_fill_manual(values = c("Avg. Home Yellow Cards" = "yellow", 
+                                "Avg. Away Yellow Cards" = "yellow", 
+                                "Avg. Home Red Cards" = "red", 
+                                "Avg. Away Red Cards" = "red")) +
+  theme_dark() +  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-Like all sports, in soccer there are penalties. If a player commits a foul, they will receive a yellow or red card. This is from the discretion of the referee at the game. This brought up the idea that playing an away game may bias how often teams get carded. From our data we found that by being the away team, you are approximately 1.25 times more likely to receive a card. This could be due to bias but could also be explained for reasons such as a team playing more aggressively when they are away or teams not wanting to be fouled out at a home game. 
+Like all sports, in soccer there are penalties. If a player commits a foul, they will receive a yellow or red card. This is from the discretion of the referee at the game. This brought up the idea that playing an away game may bias how often teams get carded. From our data we found that by being the away team, you are approximately 1.25 times more likely to receive a card. This could be due to bias but could also be explained for reasons such as a team playing more aggressively when they are away or teams not wanting to be fouled out at a home game.
 
 \#### [Goal Scoring Analysis]{.underline}:
 
