@@ -278,21 +278,17 @@ print(outcome_freq)
 -   Is there a measurable advantage to being at home?
 -   Is there a disadvantage to playing as the away team?
 
-#### Goal scoring analysis:
+#### Goal scoring analysis: Ryan Rockey
 
 -   Which teams have scored the most/fewest goals?
 -   Does having a greater % of shots on target correlate to winning more?
 -   Is there a correlation between the number of shots taken by a team and the number of goals scored?
 
-#### Betting trends:
+#### Rivalry Analysis: John Nesnidal
 
--   How well do the betting odds predict the outcome of a game?
--   Is there a correlation between pre-match betting odds and match outcomes?
-
-#### Predictive analysis:
-
--   Can we use the previous data to predict the outcome of the rest of the current premier league season?
--   How has the overall style of play (e.g., possession, based, counter-attacking) evolved over this 22-year period?
+-   Which matchups are the most one-sided?
+-   Which matchups have a HISTORY of being one-sided?
+-   Which historical rivalry has remained the most balanced?
 
 ------------------------------------------------------------------------
 
@@ -585,18 +581,30 @@ fewest_goals_scored_by_team <- goals_scored_by_team %>%
   slice_head(n = 10)
 
 # Create plot of the most goals and fewest goals
-ggplot(most_goals_scored_by_team, aes(x = reorder(team, -total_goals), y = total_goals)) + geom_bar(stat = "identity") + 
-  labs(x="Team", y="Total Goals") + theme_minimal()
-ggplot(fewest_goals_scored_by_team, aes(x = reorder(team, -total_goals), y = total_goals)) + geom_bar(stat = "identity") + 
-  labs(x="Team", y="Total Goals") + theme_minimal()
+plot1 <- ggplot(most_goals_scored_by_team, aes(x = reorder(team, -total_goals), y = total_goals)) + 
+  geom_bar(stat = "identity") + 
+  labs(x = "Team", y = "Total Goals") + 
+  theme_minimal(base_size=9)
+
+plot2 <- ggplot(fewest_goals_scored_by_team, aes(x = reorder(team, -total_goals), y = total_goals)) + 
+  geom_bar(stat = "identity") + 
+  labs(x = "Team", y = "Total Goals",) + 
+  theme_minimal(base_size=9)
+
+# Get the maximum value from both datasets
+max_value <- max(max(most_goals_scored_by_team$total_goals), max(fewest_goals_scored_by_team$total_goals))
+
+# Set the same y-axis limits for both plots
+plot1 <- plot1 + ylim(0, max_value)
+plot2 <- plot2 + ylim(0, max_value)
+
+plot1
+plot2
 ```
 
 -   Does having a greater % of shots on target correlate to winning more?
 
 ```{r}
-library(ggplot2)
-library(dplyr)
-
 # Calculate on-target percentage for home and away teams
 merged_data2 <- merged_data %>%
   mutate(HomeOnTargetPercent = (HST / HS) * 100,
@@ -635,3 +643,77 @@ ggplot(merged_data2, aes(x = AST, y = FTAG, fill = FTR)) +
   labs(x = "Shots Taken", y = "Goals Scored", title = "Relationship between Shots Taken and Goals Scored for Away Team") +
   theme_minimal()
 ```
+
+
+#### [Rivalry Analysis]{.underline}:
+
+(1) Which matchups are the most one-sided?
+```{r}
+# Sort the data into a heat map of home vs away wins for each combination of teams
+win_percentages <- prem_clean %>%
+  filter(FTR == 'H') %>%
+  group_by(HomeTeam, AwayTeam) %>%
+  summarise(Wins = n(), .groups = 'drop') %>%
+  left_join(prem_clean %>% count(HomeTeam, AwayTeam), by = c("HomeTeam", "AwayTeam")) %>%
+  mutate(WinPercentage = Wins / n * 100) %>%
+  mutate(WinIndex = WinPercentage * sqrt(n))
+# I added one more column called WinIndex that is supposed to serve as a better measurement of wins against a team. This value is calculated by the win percentage times the square root of the number of games played. This prevents groups of two teams with only one game played from dominating the list.
+
+# Reshape the data to wide format
+result_table <- win_percentages %>%
+  select(HomeTeam, AwayTeam, WinPercentage) %>%
+  pivot_wider(names_from = AwayTeam, values_from = WinPercentage, values_fill = list(WinPercentage = 50))
+
+# Convert from wide to long format for ggplot
+long_data <- result_table %>%
+  pivot_longer(cols = -HomeTeam, names_to = "AwayTeam", values_to = "WinPercentage")
+
+# Generate the heatmap
+ggplot(long_data, aes(x = AwayTeam, y = HomeTeam, fill = WinPercentage)) +
+  geom_tile() + 
+  scale_fill_gradient(low = "blue", high = "red") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 5, angle = 90, vjust = 0.5, hjust=1)) +
+  theme(axis.text.y = element_text(size = 5)) +
+  labs(fill = "Home Team Win %", title = "Win Percentages", x = "Away Team", y = "Home Team")
+
+```
+(2) Which matchups have a history of being one-sided?
+```{r}
+# Reshape the data to wide format
+result_table_adjusted <- win_percentages %>%
+  select(HomeTeam, AwayTeam, WinIndex) %>%
+  pivot_wider(names_from = AwayTeam, values_from = WinIndex, values_fill = list(WinIndex = 50))
+
+# Convert from wide to long format for ggplot
+long_data_adjusted <- result_table_adjusted %>%
+  pivot_longer(cols = -HomeTeam, names_to = "AwayTeam", values_to = "WinIndex")
+
+# Adjusted heatmap
+ggplot(long_data_adjusted, aes(x = AwayTeam, y = HomeTeam, fill = WinIndex)) +
+  geom_tile() + 
+  scale_fill_gradient(low = "blue", high = "red") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 5, angle = 90, vjust = 0.5, hjust=1)) +
+  theme(axis.text.y = element_text(size = 5)) +
+  labs(fill = "Win Index", title = "Win Index (Adjusted)", x = "Away Team", y = "Home Team")
+
+```
+(3) Which historical rivalry has remained the most balanced?
+
+```{r}
+win_percentages <- win_percentages %>%
+  mutate(BalanceIndex = (100 - (abs(50 - WinPercentage) * 2)))
+
+# Generate the heatmap
+ggplot(win_percentages, aes(x = AwayTeam, y = HomeTeam, fill = BalanceIndex)) +
+  geom_tile(aes(alpha = n)) + 
+  scale_fill_gradient(low = "blue", high = "red") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 5, angle = 90, vjust = 0.5, hjust=1)) +
+  theme(axis.text.y = element_text(size = 5)) +
+  labs(fill = "Balance Index", title = "Historical Rivalries", x = "Away Team", y = "Home Team")
+
+
+```
+
