@@ -266,7 +266,7 @@ print(outcome_freq)
 
 ### Questions to be answered:
 
-#### General Trends over time:
+#### General Trends over time: Ryan Riebesehl
 
 -   How has scoring changed over the years?
 -   How does scoring change across a full season?
