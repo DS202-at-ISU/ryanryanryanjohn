@@ -278,21 +278,11 @@ print(outcome_freq)
 -   Is there a measurable advantage to being at home?
 -   Is there a disadvantage to playing as the away team?
 
-#### Goal scoring analysis:
+#### Goal scoring analysis: Ryan Rockey
 
 -   Which teams have scored the most/fewest goals?
 -   Does having a greater % of shots on target correlate to winning more?
 -   Is there a correlation between the number of shots taken by a team and the number of goals scored?
-
-#### Betting trends:
-
--   How well do the betting odds predict the outcome of a game?
--   Is there a correlation between pre-match betting odds and match outcomes?
-
-#### Predictive analysis:
-
--   Can we use the previous data to predict the outcome of the rest of the current premier league season?
--   How has the overall style of play (e.g., possession, based, counter-attacking) evolved over this 22-year period?
 
 ------------------------------------------------------------------------
 
