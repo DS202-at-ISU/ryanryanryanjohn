@@ -462,7 +462,7 @@ shots_percent = avg_home_shots/avg_away_shots
 corners_percent = avg_home_corners/avg_away_corners
 
 cat("The average final score per game by the home team is: ", avg_home_final_score, "\n") 
-cat("The average fianl score per game by the away team is: ", avg_away_final_score, "\n")
+cat("The average final score per game by the away team is: ", avg_away_final_score, "\n")
 cat("The average shots on goal by the home team is: ", avg_home_shots, "\n") 
 cat("The average shots on goal by the away team is: ", avg_away_shots, "\n")
 cat("The average amount of corner kicks by the home team is: ", avg_home_corners, "\n") 
@@ -498,9 +498,9 @@ pie_chart <- ggplot(data = NULL, aes(x = "", y = FTR_counts, fill = names(FTR_co
         panel.grid  = element_blank(),
         axis.title = element_blank()) +
    scale_fill_manual(values = c("H" = "forestgreen", "A" = "maroon", "D" = "navy"),
-                    labels = c(paste("Home Win", " (", percentages["H"], "%)"),
-                               paste("Away Win", " (", percentages["A"], "%)"),
-                               paste("Draw", " (", percentages["D"], "%)")))
+                    labels = c(paste("Away Win", " (", percentages["A"], "%)"),
+                               paste("Draw", " (", percentages["D"], "%)"),
+                               paste("Home Win", " (", percentages["H"], "%)")))
 
 # Display the pie chart
 print(pie_chart)
